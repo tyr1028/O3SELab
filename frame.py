@@ -1,6 +1,8 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
+import concepts
+
 import sys
 
 class DCA(QWidget):
@@ -25,6 +27,26 @@ class DCA(QWidget):
         self.tab6 = QWidget()
         self.tabs.resize(1200, 900)
 
+        self.csvbutton = QPushButton('Load csv')
+        self.Iconlabel = QLabel()
+        self.csvbutton.clicked.connect(self.open_csv)
+        self.Iconlabel.setPixmap(QPixmap("Icon.png"))
+        self.csvbutton.setMaximumWidth(100)
+
+        self.csvbutton.move(20, 20)
+        self.Iconlabel.move(600,450)
+
+        self.iconlayout = QHBoxLayout()
+        self.iconlayout.addStretch(1)
+        self.iconlayout.addWidget(self.Iconlabel)
+        self.iconlayout.addStretch(1)
+
+        self.tab1.layout = QVBoxLayout()
+        self.tab1.layout.addWidget(self.csvbutton)
+        self.tab1.layout.addLayout(self.iconlayout)
+
+        self.tab1.setLayout(self.tab1.layout)
+
         self.tabs.addTab(self.tab1, "main")
         self.tabs.addTab(self.tab2, "show formal context")
         self.tabs.addTab(self.tab3, "run FCA")
@@ -36,6 +58,10 @@ class DCA(QWidget):
         self.setLayout(self.layout)
 
         self.show()
+    
+    def open_csv(self):
+        fname = QFileDialog.getOpenFileName(self)
+        self.csv = concepts.load_csv(fname[0])
 
 app = QApplication(sys.argv)
 ex = DCA()
