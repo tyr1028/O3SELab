@@ -1,3 +1,44 @@
+# Fact Checker
+# O3SE Lab
+
+# [진행상황]
+
+
+# [계획]
+# main
+# File을 Load후에 반응이 없어서 제대로 로드되었는지 확인 할 수 없음
+
+# show formal context
+# 표의 형태로 구현하기
+# 표의 크기를 자연스럽고 보기좋게 할 수 있게 만들기.
+
+# [Concept Explorer]
+# 표가 나오고 셀을 클릭할 때 체크상태에 따라 체크, 체크해제 가능
+
+# Object와 Attribute들의 교환 버튼 존재
+# Object 늘리기 버튼 줄이기 버튼
+
+# Attribute 늘리기 버튼 줄이기 버튼
+# Attribute Name 줄이기 버튼
+
+# Object Count
+# Attribute Count
+
+# 실행 취소 버튼
+
+# 다시 저장하기 버튼
+
+# run FCA
+#
+
+# show concept lattice
+
+# extract association rules
+
+# a.r.m
+
+
+
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
@@ -17,7 +58,7 @@ class DCA(QWidget):
         self.setGeometry(100, 100, 1200, 900)
 
         self.layout = QVBoxLayout(self)
-
+    
         self.tabs = QTabWidget()
         self.tab1 = QWidget()
         self.tab2 = QWidget()
