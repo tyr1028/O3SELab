@@ -6,7 +6,7 @@
 
 # [계획]
 # main
-# File을 Load후에 반응이 없어서 제대로 로드되었는지 확인 할 수 없음
+# File을 Load후에 반응이 없어서 제대로 로드되었는지 확인 할 수 없음 -> 완료
 
 # show formal context
 # 표의 형태로 구현하기
@@ -53,12 +53,15 @@ class DCA(QWidget):
         self.initUI()
 
     def initUI(self):
+        #윈도우창 이름, 아이콘, 창 크기
         self.setWindowTitle('FactChecker')
         self.setWindowIcon((QIcon('icon.png')))
         self.setGeometry(100, 100, 1200, 900)
 
+        #레이아웃 설정
         self.layout = QVBoxLayout(self)
-    
+
+        #탭 생성
         self.tabs = QTabWidget()
         self.tab1 = QWidget()
         self.tab2 = QWidget()
@@ -68,41 +71,60 @@ class DCA(QWidget):
         self.tab6 = QWidget()
         self.tabs.resize(1200, 900)
 
+        #탭1(main) 버튼, 아이콘 생성
         self.csvbutton = QPushButton('Load csv')
         self.Iconlabel = QLabel()
         self.csvbutton.clicked.connect(self.open_csv)
         self.Iconlabel.setPixmap(QPixmap("Icon.png"))
         self.csvbutton.setMaximumWidth(100)
 
-        self.csvbutton.move(20, 20)
-        self.Iconlabel.move(600,450)
-
+        #아이콘 중앙배치
         self.iconlayout = QHBoxLayout()
         self.iconlayout.addStretch(1)
         self.iconlayout.addWidget(self.Iconlabel)
         self.iconlayout.addStretch(1)
 
+        #버튼, 아이콘 레이아웃 추가
         self.tab1.layout = QVBoxLayout()
         self.tab1.layout.addWidget(self.csvbutton)
         self.tab1.layout.addLayout(self.iconlayout)
 
+        #탭에 레이아웃 설정
         self.tab1.setLayout(self.tab1.layout)
 
-        self.tabs.addTab(self.tab1, "main")
-        self.tabs.addTab(self.tab2, "show formal context")
-        self.tabs.addTab(self.tab3, "run FCA")
-        self.tabs.addTab(self.tab4, "show concept lattice")
-        self.tabs.addTab(self.tab5, "extract association rules")
+        #탭2(show formal context)
+
+
+        #탭3(run fca)
+
+        #탭4(show concept lattice)
+
+        #탭5(extract association rules)
+
+        #탭6(A.R.M)
+
+        #탭 통합
+        self.tabs.addTab(self.tab1, "Main")
+        self.tabs.addTab(self.tab2, "Show formal context")
+        self.tabs.addTab(self.tab3, "Run FCA")
+        self.tabs.addTab(self.tab4, "Show concept lattice")
+        self.tabs.addTab(self.tab5, "Extract association rules")
         self.tabs.addTab(self.tab6, "A.R.M")
         
+        #레이아웃 메인으로 집어넣기
         self.layout.addWidget(self.tabs)
         self.setLayout(self.layout)
 
         self.show()
     
     def open_csv(self):
+        #csv파일 불러오는 버튼 클릭시
         fname = QFileDialog.getOpenFileName(self)
-        self.csv = concepts.load_csv(fname[0])
+        try:
+            self.csv = concepts.load_csv(fname[0])
+            QMessageBox.information(self, 'Success', 'Load Success')
+        except:
+            QMessageBox.warning(self, 'Failed', 'Load Failed')
 
 app = QApplication(sys.argv)
 ex = DCA()
