@@ -77,23 +77,51 @@ class DCA(QWidget):
         self.csvbutton.clicked.connect(self.open_csv)
         self.Iconlabel.setPixmap(QPixmap("Icon.png"))
         self.csvbutton.setMaximumWidth(100)
+        
+        #로드한 파일 이름 표시
+        self.loadname = QLabel()
+        self.loadname.setText("")
 
         #아이콘 중앙배치
         self.iconlayout = QHBoxLayout()
         self.iconlayout.addStretch(1)
         self.iconlayout.addWidget(self.Iconlabel)
         self.iconlayout.addStretch(1)
+        
+        #버튼과 파일위치 레이아웃 추가
+        self.bflayout = QHBoxLayout()
+        self.bflayout.addWidget(self.csvbutton)
+        self.bflayout.addWidget(self.loadname)
 
         #버튼, 아이콘 레이아웃 추가
         self.tab1.layout = QVBoxLayout()
-        self.tab1.layout.addWidget(self.csvbutton)
+        self.tab1.layout.addStretch(0)
+        self.tab1.layout.addLayout(self.bflayout)
+        self.tab1.layout.addStretch(1)
         self.tab1.layout.addLayout(self.iconlayout)
 
         #탭에 레이아웃 설정
         self.tab1.setLayout(self.tab1.layout)
-
+    
         #탭2(show formal context)
+        
+        self.runbutton_1 = QPushButton('Run') 
+        self.runbutton_1.clicked.connect(self.run_Show_formal_context)
 
+        self.table = QTableWidget(self)
+        self.table.resize(1000,800)
+        self.table.setColumnCount(0)
+        self.table.setRowCount(0)
+
+
+
+        # 셀 내용 채우기
+        self.table.setItem(0, 0, QTableWidgetItem('0'))
+
+        self.tab2.layout = QVBoxLayout()
+        self.tab2.layout.addWidget(self.runbutton_1)
+        self.tab2.layout.addWidget(self.table)
+        self.tab2.setLayout(self.tab2.layout)
 
         #탭3(run fca)
 
@@ -123,8 +151,24 @@ class DCA(QWidget):
         try:
             self.csv = concepts.load_csv(fname[0])
             QMessageBox.information(self, 'Success', 'Load Success')
+            self.loadname.setText(fname[0])
         except:
             QMessageBox.warning(self, 'Failed', 'Load Failed')
+
+    def run_Show_formal_context(self):
+        self.table.setColumnCount(len(self.csv.properties))
+        self.table.setRowCount(len(self.csv.objects))
+        self.table.setHorizontalHeaderLabels(self.csv.properties)
+        self.table.setVerticalHeaderLabels(self.csv.objects)
+        for i in range(len(self.csv.objects)):
+            for j in range(len(self.csv.properties)):
+                if(self.csv.bools[i][j]):
+                    self.table.setItem(i, j, QTableWidgetItem('X'))
+                else:
+                    self.table.setItem(i, j, QTableWidgetItem())
+
+
+        
 
 app = QApplication(sys.argv)
 ex = DCA()
