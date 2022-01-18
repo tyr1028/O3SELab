@@ -114,18 +114,33 @@ class DCA(QWidget):
         self.savebutton_2 = QPushButton('Save')
         self.savebutton_2.clicked.connect(self.save_csv)
 
+        self.objects = QLabel('objects: ')
+        self.properties = QLabel('properties: ')
+
         self.table = QTableWidget(self)
 
         self.buttons = QHBoxLayout()
         self.buttons.addWidget(self.runbutton_2)
         self.buttons.addWidget(self.savebutton_2)
 
+        self.information = QVBoxLayout()
+        self.information.addStretch(0)
+        self.information.addWidget(self.objects)
+        self.information.addStretch(0)
+        self.information.addWidget(self.properties)
+        self.information.addStretch(1)
+
+        self.table_and_information = QHBoxLayout()
+        self.table_and_information.addLayout(self.information)
+        self.table_and_information.addWidget(self.table)
+
+
         # 셀 내용 채우기
         self.table.setItem(0, 0, QTableWidgetItem('0'))
 
         self.tab2.layout = QVBoxLayout()
         self.tab2.layout.addLayout(self.buttons)
-        self.tab2.layout.addWidget(self.table)
+        self.tab2.layout.addLayout(self.table_and_information)
         self.tab2.setLayout(self.tab2.layout)
 
         #탭3(run fca)
@@ -172,6 +187,8 @@ class DCA(QWidget):
                         self.table.setItem(i, j, QTableWidgetItem('X'))
                     else:
                         self.table.setItem(i, j, QTableWidgetItem())
+            self.objects.setText('objects: ' + str(len(self.csv.properties)))
+            self.properties.setText('properties: ' + str(len(self.csv.objects)))
         except:
             QMessageBox.warning(self, 'Failed', 'Error!')
     
