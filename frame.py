@@ -146,14 +146,17 @@ class DCA(QWidget):
         self.tab2.setLayout(self.tab2.layout)
 
         #탭3(run fca)
+        #run 버튼
         self.runbutton_3 = QPushButton('Run') 
         self.runbutton_3.clicked.connect(self.run_FCA)
 
+        #extent intent만 필요함, 마지막줄은 화면에 자동으로 크기 맞춰주는 코드
         self.FCA_table = QTableWidget(self)
         self.FCA_table.setColumnCount(2)
         self.FCA_table.setHorizontalHeaderLabels(['Extent','Intent'])
         self.FCA_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
+        #레이아웃 추가
         self.tab3.layout = QVBoxLayout()
         self.tab3.layout.addWidget(self.runbutton_3)
         self.tab3.layout.addWidget(self.FCA_table)
@@ -225,19 +228,33 @@ class DCA(QWidget):
 
     def run_FCA(self):
         try:
+            #반복횟수
             cnt = 0
+
+            #lattice 설정
             self.lattice = self.csv.lattice
+
+            #FCA개수만큼 row설정
             self.FCA_table.setRowCount(len(self.lattice))
+
+            #for문 시작
             for extent, intent in self.lattice:
+                #extent, intent 초기화
                 extent_str = ''
                 intent_str = ''
                 if len(extent) <= 0:
+                    #아무것도 없으면 비어있는 리스트
                     self.FCA_table.setItem(cnt, 0, QTableWidgetItem('[ ]'))
                 else:
                     for i in extent:
+                        #extent 하나씩 추출해서 뒤에 콤마 붙여주기
                         extent_str = extent_str + i + ','
+                    #마지막 콤마 삭제
                     extent_str = extent_str[:-1]
+                    #꺾쇠괄호 달아주기
                     self.FCA_table.setItem(cnt, 0, QTableWidgetItem('[' + extent_str + ']'))
+                
+                #intent부분 같음
                 if len(intent) <= 0:
                     self.FCA_table.setItem(cnt, 1, QTableWidgetItem('[ ]'))
                 else:
@@ -245,6 +262,7 @@ class DCA(QWidget):
                         intent_str = intent_str + i + ','
                     intent_str = intent_str[:-1]
                     self.FCA_table.setItem(cnt, 1, QTableWidgetItem('[' + intent_str + ']'))
+                #반복횟수 카운트
                 cnt = cnt + 1
         except:
             QMessageBox.warning(self, 'Failed', 'Error!')
