@@ -10,7 +10,7 @@
 
 # show formal context
 # 표의 형태로 구현하기
-# 표의 크기를 자연스럽고 보기좋게 할 수 있게 만들기.
+# 표의 크기를 자연스럽고 보기좋게 할 수 있게 만들기. ->완료
 
 # [Concept Explorer]
 # 표가 나오고 셀을 클릭할 때 체크상태에 따라 체크, 체크해제 가능
@@ -118,10 +118,12 @@ class DCA(QWidget):
         self.properties = QLabel('properties: ')
 
         self.table = QTableWidget(self)
+        self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.table.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
-        self.buttons = QHBoxLayout()
-        self.buttons.addWidget(self.runbutton_2)
-        self.buttons.addWidget(self.savebutton_2)
+        self.buttons_2 = QHBoxLayout()
+        self.buttons_2.addWidget(self.runbutton_2)
+        self.buttons_2.addWidget(self.savebutton_2)
 
         self.information = QVBoxLayout()
         self.information.addStretch(0)
@@ -139,13 +141,39 @@ class DCA(QWidget):
         self.table.setItem(0, 0, QTableWidgetItem('0'))
 
         self.tab2.layout = QVBoxLayout()
-        self.tab2.layout.addLayout(self.buttons)
+        self.tab2.layout.addLayout(self.buttons_2)
         self.tab2.layout.addLayout(self.table_and_information)
         self.tab2.setLayout(self.tab2.layout)
 
         #탭3(run fca)
+        self.runbutton_3 = QPushButton('Run') 
+        self.runbutton_3.clicked.connect(self.run_FCA)
+
+        self.FCA_table = QTableWidget(self)
+        self.FCA_table.setColumnCount(2)
+        self.FCA_table.setHorizontalHeaderLabels(['Extent','Intent'])
+        self.FCA_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+
+        self.tab3.layout = QVBoxLayout()
+        self.tab3.layout.addWidget(self.runbutton_3)
+        self.tab3.layout.addWidget(self.FCA_table)
+
+        self.tab3.setLayout(self.tab3.layout)
 
         #탭4(show concept lattice)
+        self.runbutton_4 = QPushButton('Run') 
+        self.runbutton_4.clicked.connect(self.show_concept_lattice)
+        self.savebutton_4 = QPushButton('Save')
+        self.savebutton_4.clicked.connect(self.save_lattice)
+
+        self.buttons_4 = QHBoxLayout()
+        self.buttons_4.addWidget(self.runbutton_4)
+        self.buttons_4.addWidget(self.savebutton_4)
+
+        self.tab4.layout = QVBoxLayout()
+        self.tab4.layout.addLayout(self.buttons_4)
+
+        self.tab4.setLayout(self.tab4.layout)
 
         #탭5(extract association rules)
 
@@ -193,6 +221,38 @@ class DCA(QWidget):
             QMessageBox.warning(self, 'Failed', 'Error!')
     
     def save_csv(self):
+        pass
+
+    def run_FCA(self):
+        try:
+            cnt = 0
+            self.lattice = self.csv.lattice
+            self.FCA_table.setRowCount(len(self.lattice))
+            for extent, intent in self.lattice:
+                extent_str = ''
+                intent_str = ''
+                if len(extent) <= 0:
+                    self.FCA_table.setItem(cnt, 0, QTableWidgetItem('[ ]'))
+                else:
+                    for i in extent:
+                        extent_str = extent_str + i + ','
+                    extent_str = extent_str[:-1]
+                    self.FCA_table.setItem(cnt, 0, QTableWidgetItem('[' + extent_str + ']'))
+                if len(intent) <= 0:
+                    self.FCA_table.setItem(cnt, 1, QTableWidgetItem('[ ]'))
+                else:
+                    for i in intent:
+                        intent_str = intent_str + i + ','
+                    intent_str = intent_str[:-1]
+                    self.FCA_table.setItem(cnt, 1, QTableWidgetItem('[' + intent_str + ']'))
+                cnt = cnt + 1
+        except:
+            QMessageBox.warning(self, 'Failed', 'Error!')
+
+    def show_concept_lattice(self):
+        pass
+
+    def save_lattice(self):
         pass
 
 app = QApplication(sys.argv)
