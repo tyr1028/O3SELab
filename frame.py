@@ -21,17 +21,17 @@
 # Attribute 늘리기 버튼 줄이기 버튼
 # Attribute Name 줄이기 버튼
 
-# Object Count
-# Attribute Count
+# Object Count ->완료
+# Attribute Count ->완료
 
 # 실행 취소 버튼
 
 # 다시 저장하기 버튼
 
-# run FCA
+# run FCA ->완료
 #
 
-# show concept lattice
+# show concept lattice ->진행중
 
 # extract association rules
 
