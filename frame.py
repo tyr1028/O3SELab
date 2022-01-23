@@ -43,7 +43,6 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
 import concepts
-
 import sys
 
 class DCA(QWidget):
@@ -224,7 +223,24 @@ class DCA(QWidget):
             QMessageBox.warning(self, 'Failed', 'Error!')
     
     def save_csv(self):
-        pass
+       
+        csv_save = [[0 for col in range(self.table.columnCount()+1)] for row in range(self.table.rowCount()+1)]
+        
+        #object names to list        
+        for x in range(self.table.columnCount()):
+            csv_save[0][x] = (self.table.horizontalHeaderItem(x).text())
+
+        #property names to list
+        for y in range(self.table.rowCount()):
+            csv_save[y+1][0] = (self.table.verticalHeaderItem(y).text())
+
+        #bool to list
+        for x in range(self.table.rowCount()):
+            for y in range(self.table.columnCount()):
+                csv_save[x+1][y+1] = (self.table.item(x,y).text())
+
+        
+                
 
     def run_FCA(self):
         try:
