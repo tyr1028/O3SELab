@@ -196,7 +196,7 @@ class DCA(QWidget):
         self.show()
     
     def open_csv(self):
-        #csv파일 불러오는 버튼 클릭시
+        #csv파일 불러오는 버튼 클릭시 파일탐색기 열기
         fname = QFileDialog.getOpenFileName(self)
         try:
             self.csv = concepts.load_csv(fname[0])
@@ -207,18 +207,25 @@ class DCA(QWidget):
 
     def run_Show_formal_context(self):
         try:
+            #불러온 csv파일로 테이블 크기 설정
             self.table.setColumnCount(len(self.csv.properties))
             self.table.setRowCount(len(self.csv.objects))
+
+            #테이블 헤더 설정
             self.table.setHorizontalHeaderLabels(self.csv.properties)
             self.table.setVerticalHeaderLabels(self.csv.objects)
+
+            #테이블 아이템 설정
             for i in range(len(self.csv.objects)):
                 for j in range(len(self.csv.properties)):
                     if(self.csv.bools[i][j]):
                         self.table.setItem(i, j, QTableWidgetItem('X'))
                     else:
                         self.table.setItem(i, j, QTableWidgetItem())
-            self.objects.setText('objects: ' + str(len(self.csv.properties)))
-            self.properties.setText('properties: ' + str(len(self.csv.objects)))
+            
+            #object, properties 수
+            self.objects.setText('objects: ' + str(len(self.csv.objects)))
+            self.properties.setText('properties: ' + str(len(self.csv.properties)))
         except:
             QMessageBox.warning(self, 'Failed', 'Error!')
     
