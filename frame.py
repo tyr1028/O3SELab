@@ -50,6 +50,8 @@ import tkinter.filedialog
 import concepts
 import sys
 
+from pdf2image import convert_from_path
+
 class DCA(QWidget):
 
     def __init__(self):
@@ -169,7 +171,7 @@ class DCA(QWidget):
 
         #탭4(show concept lattice)
         self.runbutton_4 = QPushButton('Run') 
-        self.runbutton_4.clicked.connect(self.show_concept_lattice)
+        self.runbutton_4.clicked.connect(self.concept_lattice)
         self.savebutton_4 = QPushButton('Show')
         self.savebutton_4.clicked.connect(self.show_lattice)
 
@@ -308,11 +310,18 @@ class DCA(QWidget):
         except:
             QMessageBox.warning(self, 'Failed', 'Error!')
 
-    def show_concept_lattice(self):
-        pass
-
+    def concept_lattice(self):
+        self.ltc = self.csv.lattice
+        self.viz = self.ltc.graphviz(view=True)
+    
+    #pip install pdf2image
     def show_lattice(self):
-        pass
+
+       self.pages = convert_from_path('Lattice.gv.pdf')
+
+       for i in range(len(self.pages)):
+           self.pages[i].save('page' + str(i) + '.jpg', 'JPEG')
+        
 
 app = QApplication(sys.argv)
 ex = DCA()
