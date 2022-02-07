@@ -42,6 +42,8 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
+import pandas as pd
+
 from tkinter import *
 import tkinter.filedialog
 
@@ -249,6 +251,9 @@ class DCA(QWidget):
             for y in range(self.table.columnCount()):
                 csv_save[x+1][y+1] = (self.table.item(x,y).text())
 
+        #기존 csv파일과 동일한 형식 유지
+        csv_save[0].insert(0, 'name')
+        
         #파일 탐색기 오픈 후 경로지정
         root = Tk().withdraw()
         title = 'Save project as'
@@ -256,7 +261,10 @@ class DCA(QWidget):
         filename = tkinter.filedialog.asksaveasfilename(filetypes=ftypes, title=title, initialfile='filename.csv')
 
         #파일 저장 코드
-        print(filename)
+        # print(filename)
+        dataframe = pd.DataFrame(csv_save)
+        dataframe.to_csv(filename, header=False, index=False)
+
                 
 
     def run_FCA(self):
