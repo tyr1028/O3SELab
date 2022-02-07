@@ -42,6 +42,9 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
+from tkinter import *
+import tkinter.filedialog
+
 import concepts
 import sys
 
@@ -118,7 +121,7 @@ class DCA(QWidget):
 
         self.table = QTableWidget(self)
         self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.table.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.table.verticalHeader().setSectionResizeMode(QHeaderView.Stretch) # 추후 수정
 
         self.buttons_2 = QHBoxLayout()
         self.buttons_2.addWidget(self.runbutton_2)
@@ -165,8 +168,8 @@ class DCA(QWidget):
         #탭4(show concept lattice)
         self.runbutton_4 = QPushButton('Run') 
         self.runbutton_4.clicked.connect(self.show_concept_lattice)
-        self.savebutton_4 = QPushButton('Save')
-        self.savebutton_4.clicked.connect(self.save_lattice)
+        self.savebutton_4 = QPushButton('Show')
+        self.savebutton_4.clicked.connect(self.show_lattice)
 
         self.buttons_4 = QHBoxLayout()
         self.buttons_4.addWidget(self.runbutton_4)
@@ -246,7 +249,14 @@ class DCA(QWidget):
             for y in range(self.table.columnCount()):
                 csv_save[x+1][y+1] = (self.table.item(x,y).text())
 
-        
+        #파일 탐색기 오픈 후 경로지정
+        root = Tk().withdraw()
+        title = 'Save project as'
+        ftypes = [('csv file', '.csv'), ('Allfiles', '*')]
+        filename = tkinter.filedialog.asksaveasfilename(filetypes=ftypes, title=title, initialfile='filename.csv')
+
+        #파일 저장 코드
+        print(filename)
                 
 
     def run_FCA(self):
@@ -293,7 +303,7 @@ class DCA(QWidget):
     def show_concept_lattice(self):
         pass
 
-    def save_lattice(self):
+    def show_lattice(self):
         pass
 
 app = QApplication(sys.argv)
