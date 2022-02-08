@@ -175,12 +175,18 @@ class DCA(QWidget):
         self.savebutton_4 = QPushButton('Show')
         self.savebutton_4.clicked.connect(self.show_lattice)
 
+        self.image_scroll = QScrollArea()
+        self.image_scroll.resize(800, 600)
+        self.lattice_img = QLabel()
+        self.image_scroll.setWidget(self.lattice_img)
+
         self.buttons_4 = QHBoxLayout()
         self.buttons_4.addWidget(self.runbutton_4)
         self.buttons_4.addWidget(self.savebutton_4)
 
         self.tab4.layout = QVBoxLayout()
         self.tab4.layout.addLayout(self.buttons_4)
+        self.tab4.layout.addWidget(self.image_scroll)
 
         self.tab4.setLayout(self.tab4.layout)
 
@@ -237,35 +243,37 @@ class DCA(QWidget):
             QMessageBox.warning(self, 'Failed', 'Error!')
     
     def save_csv(self):
-       
-        csv_save = [[0 for col in range(self.table.columnCount()+1)] for row in range(self.table.rowCount()+1)]
-        
-        #object names to list        
-        for x in range(self.table.columnCount()):
-            csv_save[0][x] = (self.table.horizontalHeaderItem(x).text())
+        try:
+            csv_save = [[0 for col in range(self.table.columnCount()+1)] for row in range(self.table.rowCount()+1)]
+            
+            #object names to list        
+            for x in range(self.table.columnCount()):
+                csv_save[0][x] = (self.table.horizontalHeaderItem(x).text())
 
-        #property names to list
-        for y in range(self.table.rowCount()):
-            csv_save[y+1][0] = (self.table.verticalHeaderItem(y).text())
+            #property names to list
+            for y in range(self.table.rowCount()):
+                csv_save[y+1][0] = (self.table.verticalHeaderItem(y).text())
 
-        #bool to list
-        for x in range(self.table.rowCount()):
-            for y in range(self.table.columnCount()):
-                csv_save[x+1][y+1] = (self.table.item(x,y).text())
+            #bool to list
+            for x in range(self.table.rowCount()):
+                for y in range(self.table.columnCount()):
+                    csv_save[x+1][y+1] = (self.table.item(x,y).text())
 
-        #기존 csv파일과 동일한 형식 유지
-        csv_save[0].insert(0, 'name')
-        
-        #파일 탐색기 오픈 후 경로지정
-        root = Tk().withdraw()
-        title = 'Save project as'
-        ftypes = [('csv file', '.csv'), ('Allfiles', '*')]
-        filename = tkinter.filedialog.asksaveasfilename(filetypes=ftypes, title=title, initialfile='filename.csv')
+            #기존 csv파일과 동일한 형식 유지
+            csv_save[0].insert(0, 'name')
+            
+            #파일 탐색기 오픈 후 경로지정
+            root = Tk().withdraw()
+            title = 'Save project as'
+            ftypes = [('csv file', '.csv'), ('Allfiles', '*')]
+            filename = tkinter.filedialog.asksaveasfilename(filetypes=ftypes, title=title, initialfile='filename.csv')
 
-        #파일 저장 코드
-        # print(filename)
-        dataframe = pd.DataFrame(csv_save)
-        dataframe.to_csv(filename, header=False, index=False)
+            #파일 저장 코드
+            # print(filename)
+            dataframe = pd.DataFrame(csv_save)
+            dataframe.to_csv(filename, header=False, index=False)
+        except:
+            QMessageBox.warning(self, 'Failed', 'Error!')
 
                 
 
@@ -317,10 +325,13 @@ class DCA(QWidget):
     #pip install pdf2image
     def show_lattice(self):
 
-       self.pages = convert_from_path('Lattice.gv.pdf')
+        self.pages = convert_from_path('Lattice.gv.pdf')
 
-       for i in range(len(self.pages)):
-           self.pages[i].save('page' + str(i) + '.jpg', 'JPEG')
+        for i in range(len(self.pages)):
+            self.pages[i].save('page' + str(i) + '.jpg', 'JPEG')
+
+        self.lattice_img.setPixmap('page0.jpg')
+
         
 
 app = QApplication(sys.argv)
