@@ -41,6 +41,7 @@
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
+from PyQt5.QtCore import Qt
 
 import pandas as pd
 
@@ -180,12 +181,18 @@ class DCA(QWidget):
         self.lattice_img = QLabel()
         self.image_scroll.setWidget(self.lattice_img)
 
+        self.image_slider = QSlider(Qt.Horizontal, self)
+        self.image_slider.setRange(1, 5)
+        self.image_slider.setValue(3)
+        self.image_slider.setSingleStep(1)
+
         self.buttons_4 = QHBoxLayout()
         self.buttons_4.addWidget(self.runbutton_4)
         self.buttons_4.addWidget(self.savebutton_4)
 
         self.tab4.layout = QVBoxLayout()
         self.tab4.layout.addLayout(self.buttons_4)
+        self.tab4.layout.addWidget(self.image_slider)
         self.tab4.layout.addWidget(self.image_scroll)
 
         self.tab4.setLayout(self.tab4.layout)
@@ -268,6 +275,11 @@ class DCA(QWidget):
             ftypes = [('csv file', '.csv'), ('Allfiles', '*')]
             filename = tkinter.filedialog.asksaveasfilename(filetypes=ftypes, title=title, initialfile='filename.csv')
 
+            if '.csv' in filename:
+                pass
+            else:
+                filename = filename + '.csv'
+
             #파일 저장 코드
             # print(filename)
             dataframe = pd.DataFrame(csv_save)
@@ -319,18 +331,33 @@ class DCA(QWidget):
             QMessageBox.warning(self, 'Failed', 'Error!')
 
     def concept_lattice(self):
-        self.ltc = self.csv.lattice
-        self.viz = self.ltc.graphviz(view=True)
+        try:
+            self.ltc = self.csv.lattice
+            self.viz = self.ltc.graphviz(view=True)
+        except:
+            QMessageBox.warning(self, 'Failed', 'Error!')
     
     #pip install pdf2image
     def show_lattice(self):
+        try:
+            self.pages = convert_from_path('Lattice.gv.pdf')
 
-        self.pages = convert_from_path('Lattice.gv.pdf')
+            # root = Tk().withdraw()
+            # title = 'Save project as'
+            # ftypes = [('csv file', '.csv'), ('Allfiles', '*')]
+            # filename = tkinter.filedialog.asksaveasfilename(filetypes=ftypes, title=title, initialfile='filename.csv')
 
-        for i in range(len(self.pages)):
-            self.pages[i].save('page' + str(i) + '.jpg', 'JPEG')
+            # if '.csv' in filename:
+            #     pass
+            # else:
+            #     filename = filename + '.csv'
 
-        self.lattice_img.setPixmap('page0.jpg')
+            for i in range(len(self.pages)):
+                self.pages[i].save('page' + str(i) + '.jpg', 'JPEG')
+
+            self.lattice_img.setPixmap(QPixmap('page0.jpg'))
+        except:
+            QMessageBox.warning(self, 'Failed', 'Error!')
 
         
 
