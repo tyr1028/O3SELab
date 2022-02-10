@@ -181,13 +181,15 @@ class DCA(QWidget):
         self.image_scroll = QScrollArea()
         self.image_scroll.resize(800, 600)
         self.lattice_img = QLabel()
+        self.lattice_img.setScaledContents(True)
         
 
         self.image_slider = QSlider(Qt.Horizontal, self)
+        self.image_slider.setTickPosition(2)
+        self.image_slider.setTickInterval(1)
         self.image_slider.setRange(5, 20)
         self.image_slider.setValue(10)
         self.image_slider.setSingleStep(1)
-
         self.image_slider.valueChanged.connect(self.image_size)
 
         self.buttons_4 = QHBoxLayout()
@@ -359,23 +361,18 @@ class DCA(QWidget):
             for i in range(len(self.pages)):
                 self.pages[i].save('page' + str(i) + '.png', 'PNG')
 
-            self.lattice_img.setPixmap(QPixmap('page0.png'))
+            self.img_lattice = Image.open('page0.PNG')
 
-            image1 = Image.open('page0.PNG')
-
+            self.lattice_img.setPixmap(QPixmap('page0.PNG'))
             self.image_scroll.setWidget(self.lattice_img)
 
-            imag1_size = image1.size
-            print(self.image_slider.value())
-
             
-
-            print(imag1_size)
         except:
             QMessageBox.warning(self, 'Failed', 'Error!')
     
     def image_size(self):
-        print(self.image_slider.value())
+        self.lattice_size = self.img_lattice.size
+        self.lattice_img.resize(int(self.lattice_size[0]*(self.image_slider.value()*0.1)),int(self.lattice_size[1]*(self.image_slider.value()*0.1)))
         
 
 app = QApplication(sys.argv)
