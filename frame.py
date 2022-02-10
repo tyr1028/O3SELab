@@ -188,6 +188,8 @@ class DCA(QWidget):
         self.image_slider.setValue(10)
         self.image_slider.setSingleStep(1)
 
+        self.image_slider.valueChanged.connect(self.image_size)
+
         self.buttons_4 = QHBoxLayout()
         self.buttons_4.addWidget(self.runbutton_4)
         self.buttons_4.addWidget(self.savebutton_4)
@@ -371,7 +373,9 @@ class DCA(QWidget):
             print(imag1_size)
         except:
             QMessageBox.warning(self, 'Failed', 'Error!')
-
+    
+    def image_size(self):
+        print(self.image_slider.value())
         
 
 app = QApplication(sys.argv)
