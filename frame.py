@@ -53,6 +53,8 @@ import sys
 
 from pdf2image import convert_from_path
 
+from PIL import Image
+
 class DCA(QWidget):
 
     def __init__(self):
@@ -179,11 +181,11 @@ class DCA(QWidget):
         self.image_scroll = QScrollArea()
         self.image_scroll.resize(800, 600)
         self.lattice_img = QLabel()
-        self.image_scroll.setWidget(self.lattice_img)
+        
 
         self.image_slider = QSlider(Qt.Horizontal, self)
-        self.image_slider.setRange(1, 5)
-        self.image_slider.setValue(3)
+        self.image_slider.setRange(5, 20)
+        self.image_slider.setValue(10)
         self.image_slider.setSingleStep(1)
 
         self.buttons_4 = QHBoxLayout()
@@ -353,9 +355,20 @@ class DCA(QWidget):
             #     filename = filename + '.csv'
 
             for i in range(len(self.pages)):
-                self.pages[i].save('page' + str(i) + '.jpg', 'JPEG')
+                self.pages[i].save('page' + str(i) + '.png', 'PNG')
 
-            self.lattice_img.setPixmap(QPixmap('page0.jpg'))
+            self.lattice_img.setPixmap(QPixmap('page0.png'))
+
+            image1 = Image.open('page0.PNG')
+
+            self.image_scroll.setWidget(self.lattice_img)
+
+            imag1_size = image1.size
+            print(self.image_slider.value())
+
+            
+
+            print(imag1_size)
         except:
             QMessageBox.warning(self, 'Failed', 'Error!')
 
