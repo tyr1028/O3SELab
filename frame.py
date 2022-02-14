@@ -39,6 +39,7 @@
 
 
 
+from fileinput import filename
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import Qt
@@ -54,6 +55,10 @@ import sys
 from pdf2image import convert_from_path
 
 from PIL import Image
+
+from module.save_csv import save_csv
+from module.run_show_formal_context import run_Show_formal_context
+from module.run_FCA import run_FCA
 
 class DCA(QWidget):
 
@@ -119,9 +124,9 @@ class DCA(QWidget):
     
         #탭2(show formal context)
         self.runbutton_2 = QPushButton('Run') 
-        self.runbutton_2.clicked.connect(self.run_Show_formal_context)
+        self.runbutton_2.clicked.connect(lambda:run_Show_formal_context(self.table, self.csv, self.objects, self.properties))
         self.savebutton_2 = QPushButton('Save')
-        self.savebutton_2.clicked.connect(self.save_csv)
+        self.savebutton_2.clicked.connect(lambda:save_csv(self.table))
 
         self.objects = QLabel('objects: ')
         self.properties = QLabel('properties: ')
@@ -157,7 +162,7 @@ class DCA(QWidget):
         #탭3(run fca)
         #run 버튼
         self.runbutton_3 = QPushButton('Run') 
-        self.runbutton_3.clicked.connect(self.run_FCA)
+        self.runbutton_3.clicked.connect(lambda:run_FCA(self.csv, self.FCA_table))
 
         #extent intent만 필요함, 마지막줄은 화면에 자동으로 크기 맞춰주는 코드
         self.FCA_table = QTableWidget(self)
@@ -179,10 +184,10 @@ class DCA(QWidget):
         self.savebutton_4.clicked.connect(self.show_lattice)
 
         self.image_scroll = QScrollArea()
+        self.image_scroll.setAlignment(Qt.AlignCenter)
         self.image_scroll.resize(800, 600)
         self.lattice_img = QLabel()
         self.lattice_img.setScaledContents(True)
-        
 
         self.image_slider = QSlider(Qt.Horizontal, self)
         self.image_slider.setTickPosition(2)
@@ -231,110 +236,110 @@ class DCA(QWidget):
         except:
             QMessageBox.warning(self, 'Failed', 'Load Failed')
 
-    def run_Show_formal_context(self):
-        try:
-            #불러온 csv파일로 테이블 크기 설정
-            self.table.setColumnCount(len(self.csv.properties))
-            self.table.setRowCount(len(self.csv.objects))
+    # def run_Show_formal_context(self):
+    #     try:
+    #         #불러온 csv파일로 테이블 크기 설정
+    #         self.table.setColumnCount(len(self.csv.properties))
+    #         self.table.setRowCount(len(self.csv.objects))
 
-            #테이블 헤더 설정
-            self.table.setHorizontalHeaderLabels(self.csv.properties)
-            self.table.setVerticalHeaderLabels(self.csv.objects)
+    #         #테이블 헤더 설정
+    #         self.table.setHorizontalHeaderLabels(self.csv.properties)
+    #         self.table.setVerticalHeaderLabels(self.csv.objects)
 
-            #테이블 아이템 설정
-            for i in range(len(self.csv.objects)):
-                for j in range(len(self.csv.properties)):
-                    if(self.csv.bools[i][j]):
-                        self.table.setItem(i, j, QTableWidgetItem('X'))
-                    else:
-                        self.table.setItem(i, j, QTableWidgetItem())
+    #         #테이블 아이템 설정
+    #         for i in range(len(self.csv.objects)):
+    #             for j in range(len(self.csv.properties)):
+    #                 if(self.csv.bools[i][j]):
+    #                     self.table.setItem(i, j, QTableWidgetItem('X'))
+    #                 else:
+    #                     self.table.setItem(i, j, QTableWidgetItem())
             
-            #object, properties 수
-            self.objects.setText('objects: ' + str(len(self.csv.objects)))
-            self.properties.setText('properties: ' + str(len(self.csv.properties)))
-        except:
-            QMessageBox.warning(self, 'Failed', 'Error!')
+    #         #object, properties 수
+    #         self.objects.setText('objects: ' + str(len(self.csv.objects)))
+    #         self.properties.setText('properties: ' + str(len(self.csv.properties)))
+    #     except:
+    #         QMessageBox.warning(self, 'Failed', 'Error!')
     
-    def save_csv(self):
-        try:
-            csv_save = [[0 for col in range(self.table.columnCount()+1)] for row in range(self.table.rowCount()+1)]
+    # def save_csv(self):
+    #     try:
+    #         csv_save = [[0 for col in range(self.table.columnCount()+1)] for row in range(self.table.rowCount()+1)]
             
-            #object names to list        
-            for x in range(self.table.columnCount()):
-                csv_save[0][x] = (self.table.horizontalHeaderItem(x).text())
+    #         #object names to list        
+    #         for x in range(self.table.columnCount()):
+    #             csv_save[0][x] = (self.table.horizontalHeaderItem(x).text())
 
-            #property names to list
-            for y in range(self.table.rowCount()):
-                csv_save[y+1][0] = (self.table.verticalHeaderItem(y).text())
+    #         #property names to list
+    #         for y in range(self.table.rowCount()):
+    #             csv_save[y+1][0] = (self.table.verticalHeaderItem(y).text())
 
-            #bool to list
-            for x in range(self.table.rowCount()):
-                for y in range(self.table.columnCount()):
-                    csv_save[x+1][y+1] = (self.table.item(x,y).text())
+    #         #bool to list
+    #         for x in range(self.table.rowCount()):
+    #             for y in range(self.table.columnCount()):
+    #                 csv_save[x+1][y+1] = (self.table.item(x,y).text())
 
-            #기존 csv파일과 동일한 형식 유지
-            csv_save[0].insert(0, 'name')
+    #         #기존 csv파일과 동일한 형식 유지
+    #         csv_save[0].insert(0, 'name')
             
-            #파일 탐색기 오픈 후 경로지정
-            root = Tk().withdraw()
-            title = 'Save project as'
-            ftypes = [('csv file', '.csv'), ('Allfiles', '*')]
-            filename = tkinter.filedialog.asksaveasfilename(filetypes=ftypes, title=title, initialfile='filename.csv')
+    #         #파일 탐색기 오픈 후 경로지정
+    #         root = Tk().withdraw()
+    #         title = 'Save project as'
+    #         ftypes = [('csv file', '.csv'), ('Allfiles', '*')]
+    #         filename = tkinter.filedialog.asksaveasfilename(filetypes=ftypes, title=title, initialfile='filename.csv')
 
-            if '.csv' in filename:
-                pass
-            else:
-                filename = filename + '.csv'
+    #         if '.csv' in filename:
+    #             pass
+    #         else:
+    #             filename = filename + '.csv'
 
-            #파일 저장 코드
-            # print(filename)
-            dataframe = pd.DataFrame(csv_save)
-            dataframe.to_csv(filename, header=False, index=False)
-        except:
-            QMessageBox.warning(self, 'Failed', 'Error!')
+    #         #파일 저장 코드
+    #         # print(filename)
+    #         dataframe = pd.DataFrame(csv_save)
+    #         dataframe.to_csv(filename, header=False, index=False)
+    #     except:
+    #         QMessageBox.warning(self, 'Failed', 'Error!')
 
                 
 
-    def run_FCA(self):
-        try:
-            #반복횟수
-            cnt = 0
+    # def run_FCA(self):
+    #     try:
+    #         #반복횟수
+    #         cnt = 0
 
-            #lattice 설정
-            self.lattice = self.csv.lattice
+    #         #lattice 설정
+    #         self.lattice = self.csv.lattice
 
-            #FCA개수만큼 row설정
-            self.FCA_table.setRowCount(len(self.lattice))
+    #         #FCA개수만큼 row설정
+    #         self.FCA_table.setRowCount(len(self.lattice))
 
-            #for문 시작
-            for extent, intent in self.lattice:
-                #extent, intent 초기화
-                extent_str = ''
-                intent_str = ''
-                if len(extent) <= 0:
-                    #아무것도 없으면 비어있는 리스트
-                    self.FCA_table.setItem(cnt, 0, QTableWidgetItem('[ ]'))
-                else:
-                    for i in extent:
-                        #extent 하나씩 추출해서 뒤에 콤마 붙여주기
-                        extent_str = extent_str + i + ','
-                    #마지막 콤마 삭제
-                    extent_str = extent_str[:-1]
-                    #꺾쇠괄호 달아주기
-                    self.FCA_table.setItem(cnt, 0, QTableWidgetItem('[' + extent_str + ']'))
+    #         #for문 시작
+    #         for extent, intent in self.lattice:
+    #             #extent, intent 초기화
+    #             extent_str = ''
+    #             intent_str = ''
+    #             if len(extent) <= 0:
+    #                 #아무것도 없으면 비어있는 리스트
+    #                 self.FCA_table.setItem(cnt, 0, QTableWidgetItem('[ ]'))
+    #             else:
+    #                 for i in extent:
+    #                     #extent 하나씩 추출해서 뒤에 콤마 붙여주기
+    #                     extent_str = extent_str + i + ','
+    #                 #마지막 콤마 삭제
+    #                 extent_str = extent_str[:-1]
+    #                 #꺾쇠괄호 달아주기
+    #                 self.FCA_table.setItem(cnt, 0, QTableWidgetItem('[' + extent_str + ']'))
                 
-                #intent부분 같음
-                if len(intent) <= 0:
-                    self.FCA_table.setItem(cnt, 1, QTableWidgetItem('[ ]'))
-                else:
-                    for i in intent:
-                        intent_str = intent_str + i + ','
-                    intent_str = intent_str[:-1]
-                    self.FCA_table.setItem(cnt, 1, QTableWidgetItem('[' + intent_str + ']'))
-                #반복횟수 카운트
-                cnt = cnt + 1
-        except:
-            QMessageBox.warning(self, 'Failed', 'Error!')
+    #             #intent부분 같음
+    #             if len(intent) <= 0:
+    #                 self.FCA_table.setItem(cnt, 1, QTableWidgetItem('[ ]'))
+    #             else:
+    #                 for i in intent:
+    #                     intent_str = intent_str + i + ','
+    #                 intent_str = intent_str[:-1]
+    #                 self.FCA_table.setItem(cnt, 1, QTableWidgetItem('[' + intent_str + ']'))
+    #             #반복횟수 카운트
+    #             cnt = cnt + 1
+    #     except:
+    #         QMessageBox.warning(self, 'Failed', 'Error!')
 
     def concept_lattice(self):
         try:
@@ -348,25 +353,24 @@ class DCA(QWidget):
         try:
             self.pages = convert_from_path('Lattice.gv.pdf')
 
-            # root = Tk().withdraw()
-            # title = 'Save project as'
-            # ftypes = [('csv file', '.csv'), ('Allfiles', '*')]
-            # filename = tkinter.filedialog.asksaveasfilename(filetypes=ftypes, title=title, initialfile='filename.csv')
+            root = Tk().withdraw()
+            title = 'Save lattice as'
+            ftypes = [('png file', '.png'), ('Allfiles', '*')]
+            filename = tkinter.filedialog.asksaveasfilename(filetypes=ftypes, title=title, initialfile='lattice.png')
 
-            # if '.csv' in filename:
-            #     pass
-            # else:
-            #     filename = filename + '.csv'
+            if '.png' in filename:
+                pass
+            else:
+                filename = filename + '.png'
 
-            for i in range(len(self.pages)):
-                self.pages[i].save('page' + str(i) + '.png', 'PNG')
+            # for i in range(len(self.pages)):
+            #     self.pages[i].save('page' + str(i) + '.png', 'PNG')
 
-            self.img_lattice = Image.open('page0.PNG')
+            self.img_lattice = Image.open(filename)
 
-            self.lattice_img.setPixmap(QPixmap('page0.PNG'))
+            self.lattice_img.setPixmap(QPixmap(filename))
             self.image_scroll.setWidget(self.lattice_img)
-
-            
+ 
         except:
             QMessageBox.warning(self, 'Failed', 'Error!')
     
