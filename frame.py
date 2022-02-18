@@ -197,6 +197,8 @@ class DCA(QWidget):
         self.image_slider.setSingleStep(1)
         self.image_slider.valueChanged.connect(self.image_size)
 
+        self.zoom_rate = QLabel("Zoom: " + str(self.image_slider.value()*0.1))
+
         self.buttons_4 = QHBoxLayout()
         self.buttons_4.addWidget(self.runbutton_4)
         self.buttons_4.addWidget(self.savebutton_4)
@@ -204,11 +206,44 @@ class DCA(QWidget):
         self.tab4.layout = QVBoxLayout()
         self.tab4.layout.addLayout(self.buttons_4)
         self.tab4.layout.addWidget(self.image_slider)
+        self.tab4.layout.addWidget(self.zoom_rate)
         self.tab4.layout.addWidget(self.image_scroll)
 
         self.tab4.setLayout(self.tab4.layout)
 
         #탭5(extract association rules)
+        self.min_support = QLabel("minimum support :")
+        self.min_conf = QLabel("minimum confidence :")
+
+        #입력받는 부분
+        self.support_val = QLineEdit()
+        self.support_val.setPlaceholderText("Enter support(0 ~ 1) value")
+        self.conf_val = QLineEdit()
+        self.conf_val.setPlaceholderText("Enter confidence(0 ~ 1) value")
+
+        self.runbutton_5 = QPushButton('Run')
+        self.savebutton_5 =QPushButton('Save')
+
+        self.association_rule_table = QTableWidget(self)
+        self.association_rule_table.setHorizontalHeaderLabels(['전제', 'consequence', 'support', 'confidence'])
+        self.association_rule_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+
+        self.conf_sup_layout = QHBoxLayout()
+        self.conf_sup_layout.addWidget(self.min_support)
+        self.conf_sup_layout.addWidget(self.support_val)
+        self.conf_sup_layout.addWidget(self.min_conf)
+        self.conf_sup_layout.addWidget(self.conf_val)
+
+        self.buttons_5 = QHBoxLayout()
+        self.buttons_5.addWidget(self.runbutton_5)
+        self.buttons_5.addWidget(self.savebutton_5)
+
+        self.tab5.layout = QVBoxLayout()
+        self.tab5.layout.addLayout(self.conf_sup_layout)
+        self.tab5.layout.addLayout(self.buttons_5)
+        self.tab5.layout.addWidget(self.association_rule_table)
+
+        self.tab5.setLayout(self.tab5.layout)
 
         #탭6(A.R.M)
 
@@ -351,7 +386,7 @@ class DCA(QWidget):
     #pip install pdf2image
     def show_lattice(self):
         try:
-            self.pages = convert_from_path('Lattice.gv.pdf')
+            # self.pages = convert_from_path('Lattice.gv.pdf')
 
             root = Tk().withdraw()
             title = 'Save lattice as'
@@ -363,12 +398,17 @@ class DCA(QWidget):
             else:
                 filename = filename + '.png'
 
-            # for i in range(len(self.pages)):
-            #     self.pages[i].save('page' + str(i) + '.png', 'PNG')
+            for i in range(len(self.pages)):
+                self.pages[i].save('page' + str(i) + '.png', 'PNG')
 
             self.img_lattice = Image.open(filename)
 
             self.lattice_img.setPixmap(QPixmap(filename))
+
+            #내꺼 테스트할때 쓰는 코드
+            # self.img_lattice = Image.open('page0.jpg')
+
+            # self.lattice_img.setPixmap(QPixmap('page0.jpg'))
             self.image_scroll.setWidget(self.lattice_img)
  
         except:
@@ -377,7 +417,7 @@ class DCA(QWidget):
     def image_size(self):
         self.lattice_size = self.img_lattice.size
         self.lattice_img.resize(int(self.lattice_size[0]*(self.image_slider.value()*0.1)),int(self.lattice_size[1]*(self.image_slider.value()*0.1)))
-        
+        self.zoom_rate.setText("Zoom: " + str(self.image_slider.value() * 0.1))
 
 app = QApplication(sys.argv)
 ex = DCA()
