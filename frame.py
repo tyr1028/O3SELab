@@ -61,6 +61,9 @@ from module.save_csv import save_csv
 from module.run_show_formal_context import run_Show_formal_context
 from module.run_FCA import run_FCA
 
+from mlxtend.preprocessing import TransactionEncoder
+from mlxtend.frequent_patterns import apriori
+
 class DCA(QWidget):
 
     def __init__(self):
@@ -227,7 +230,7 @@ class DCA(QWidget):
         self.savebutton_5 = QPushButton('Save')
 
         self.association_rule_table = QTableWidget(self)
-        self.association_rule_table.setHorizontalHeaderLabels(['전제', 'consequence', 'support', 'confidence'])
+        self.association_rule_table.setHorizontalHeaderLabels(['antecedents', 'consequence', 'support', 'confidence'])
         self.association_rule_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
         self.conf_sup_layout = QHBoxLayout()
@@ -286,16 +289,6 @@ class DCA(QWidget):
         try:
             self.pages = convert_from_path('Lattice.gv.pdf')
 
-            # root = Tk().withdraw()
-            # title = 'Save lattice as'
-            # ftypes = [('png file', '.png'), ('Allfiles', '*')]
-            # filename = tkinter.filedialog.asksaveasfilename(filetypes=ftypes, title=title, initialfile='lattice.png')
-
-            # if '.png' in filename:
-            #     pass
-            # else:
-            #     filename = filename + '.png'
-
             self.pages[0].save('lattice.png', 'PNG')
 
             filename = 'lattice.png'
@@ -316,7 +309,9 @@ class DCA(QWidget):
     def image_size(self):
         self.lattice_size = self.img_lattice.size
         self.lattice_img.resize(int(self.lattice_size[0]*(self.image_slider.value()*0.1)),int(self.lattice_size[1]*(self.image_slider.value()*0.1)))
-        self.zoom_rate.setText("Zoom: " + str(self.image_slider.value() * 0.1))
+
+        self.zoom_value = str(self.image_slider.value()*0.1)
+        self.zoom_rate.setText("Zoom: " + self.zoom_value[0:3])
 
 app = QApplication(sys.argv)
 ex = DCA()
