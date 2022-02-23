@@ -31,15 +31,17 @@ rps = rps[['antecedents', 'consequents', 'support', 'confidence']]
 
 print(rps)
 
-val_list = rps.values.tolist()
-print(val_list)
+rps = rps[ (rps['support'] >= 0.0)]
+
+# val_list = rps.values.tolist()
+# print(val_list)
 
 
-rps = association_rules(itemset, metric="support", min_threshold=0.0)
-rps = rps[['antecedents', 'consequents', 'support', 'confidence']]
+# rps = association_rules(itemset, metric="support", min_threshold=0.0)
+# rps = rps[['antecedents', 'consequents', 'support', 'confidence']]
 
 
 print(rps)
 
 val_list = rps.values.tolist()
-print(val_list)
+print(val_list[0][0])

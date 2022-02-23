@@ -44,6 +44,7 @@ from msilib.schema import Directory
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import Qt
+from numpy import double
 
 import pandas as pd
 
@@ -60,6 +61,7 @@ from PIL import Image
 from module.save_csv import save_csv
 from module.run_show_formal_context import run_Show_formal_context
 from module.run_FCA import run_FCA
+from module.run_ARM import run_ARM
 
 from mlxtend.preprocessing import TransactionEncoder
 from mlxtend.frequent_patterns import apriori
@@ -217,34 +219,69 @@ class DCA(QWidget):
         self.tab4.setLayout(self.tab4.layout)
 
         #탭5(extract association rules)
-        self.min_support = QLabel("minimum support :")
-        self.min_conf = QLabel("minimum confidence :")
+        self.min_support = QLabel("minimum support      ")
+        self.min_conf = QLabel("minimum confidence ")
+
+        #support confidence 슬라이더 부분
+        self.sup_slider = QSlider(Qt.Horizontal, self)
+        self.sup_slider.setTickPosition(2)
+        self.sup_slider.setTickInterval(1)
+        self.sup_slider.setRange(0, 100)
+        self.sup_slider.setValue(50)
+        self.sup_slider.setSingleStep(1)
+        self.sup_slider.valueChanged.connect(lambda:self.slider_change_value(self.sup_slider, self.support_val))
+
+        self.conf_slider = QSlider(Qt.Horizontal, self)
+        self.conf_slider.setTickPosition(2)
+        self.conf_slider.setTickInterval(1)
+        self.conf_slider.setRange(0, 100)
+        self.conf_slider.setValue(50)
+        self.conf_slider.setSingleStep(1)
+        self.conf_slider.valueChanged.connect(lambda:self.slider_change_value(self.conf_slider, self.conf_val))
 
         #입력받는 부분
         self.support_val = QLineEdit()
-        self.support_val.setPlaceholderText("Enter support(0 ~ 1) value")
-        self.conf_val = QLineEdit()
-        self.conf_val.setPlaceholderText("Enter confidence(0 ~ 1) value")
+        self.support_val.setPlaceholderText("Enter 0 ~ 1 value")
+        self.support_val.setValidator(QDoubleValidator(0, 1, 3, self))
+        self.support_val.setMaximumWidth(140)
+        self.support_val.editingFinished.connect(lambda:self.line_change_value(self.sup_slider, self.support_val))
 
+        self.conf_val = QLineEdit()
+        self.conf_val.setPlaceholderText("Enter 0 ~ 1 value")
+        self.conf_val.setValidator(QDoubleValidator(0, 1, 3, self))
+        self.conf_val.setMaximumWidth(140)
+        self.conf_val.editingFinished.connect(lambda:self.line_change_value(self.conf_slider, self.conf_val))
+
+        #버튼
         self.runbutton_5 = QPushButton('Run')
+        self.runbutton_5.clicked.connect(lambda:run_ARM(self.csv, self.sup_slider.value(), 
+                                         self.conf_slider.value(), self.association_rule_table))
         self.savebutton_5 = QPushButton('Save')
 
+        #테이블 생성
         self.association_rule_table = QTableWidget(self)
+        self.association_rule_table.setColumnCount(4)
         self.association_rule_table.setHorizontalHeaderLabels(['antecedents', 'consequence', 'support', 'confidence'])
         self.association_rule_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
-        self.conf_sup_layout = QHBoxLayout()
-        self.conf_sup_layout.addWidget(self.min_support)
-        self.conf_sup_layout.addWidget(self.support_val)
-        self.conf_sup_layout.addWidget(self.min_conf)
-        self.conf_sup_layout.addWidget(self.conf_val)
+        #레이어 생성부분
+        self.sup_layout = QHBoxLayout()
+        self.sup_layout.addWidget(self.min_support)
+        self.sup_layout.addWidget(self.sup_slider)
+        self.sup_layout.addWidget(self.support_val)
+
+        self.conf_layout = QHBoxLayout()
+        self.conf_layout.addWidget(self.min_conf)
+        self.conf_layout.addWidget(self.conf_slider)
+        self.conf_layout.addWidget(self.conf_val)
 
         self.buttons_5 = QHBoxLayout()
         self.buttons_5.addWidget(self.runbutton_5)
         self.buttons_5.addWidget(self.savebutton_5)
 
         self.tab5.layout = QVBoxLayout()
-        self.tab5.layout.addLayout(self.conf_sup_layout)
+        self.tab5.layout.addLayout(self.sup_layout)
+        self.tab5.layout.addLayout(self.conf_layout)
         self.tab5.layout.addLayout(self.buttons_5)
         self.tab5.layout.addWidget(self.association_rule_table)
 
@@ -307,11 +344,32 @@ class DCA(QWidget):
             QMessageBox.warning(self, 'Failed', 'Error!')
     
     def image_size(self):
-        self.lattice_size = self.img_lattice.size
-        self.lattice_img.resize(int(self.lattice_size[0]*(self.image_slider.value()*0.1)),int(self.lattice_size[1]*(self.image_slider.value()*0.1)))
+        try:
+            self.lattice_size = self.img_lattice.size
+            self.lattice_img.resize(int(self.lattice_size[0]*(self.image_slider.value()*0.1)),int(self.lattice_size[1]*(self.image_slider.value()*0.1)))
 
-        self.zoom_value = str(self.image_slider.value()*0.1)
-        self.zoom_rate.setText("Zoom: " + self.zoom_value[0:3])
+            self.zoom_value = str(self.image_slider.value()*0.1)
+            self.zoom_rate.setText("Zoom: " + self.zoom_value[0:3])
+        except:
+            QMessageBox.warning(self, 'Failed', 'Error!')
+
+    def slider_change_value(self, slider, line):
+        try: 
+            set_value = str(slider.value() * 0.01)
+            line.setText(set_value[0:4])
+        except:
+            QMessageBox.warning(self, 'Failed', 'Error!')
+    
+    def line_change_value(self, slider, line):
+        try: 
+            if line.text() != '':
+                line_value = (double)(line.text())
+                if line_value >=0 and line_value <= 1:
+                    slider.setValue((int)(line_value * 100))
+                else:
+                    pass
+        except:
+            QMessageBox.warning(self, 'Failed', 'Error!')
 
 app = QApplication(sys.argv)
 ex = DCA()
