@@ -230,6 +230,8 @@ class DCA(QWidget):
         self.sup_slider.setValue(50)
         self.sup_slider.setSingleStep(1)
         self.sup_slider.valueChanged.connect(lambda:self.slider_change_value(self.sup_slider, self.support_val))
+        self.sup_slider.valueChanged.connect(lambda:run_ARM(self.csv, self.sup_slider.value(), 
+                                             self.conf_slider.value(), self.association_rule_table))
 
         self.conf_slider = QSlider(Qt.Horizontal, self)
         self.conf_slider.setTickPosition(2)
@@ -238,6 +240,8 @@ class DCA(QWidget):
         self.conf_slider.setValue(50)
         self.conf_slider.setSingleStep(1)
         self.conf_slider.valueChanged.connect(lambda:self.slider_change_value(self.conf_slider, self.conf_val))
+        self.conf_slider.valueChanged.connect(lambda:run_ARM(self.csv, self.sup_slider.value(), 
+                                              self.conf_slider.value(), self.association_rule_table))
 
         #입력받는 부분
         self.support_val = QLineEdit()
@@ -288,6 +292,19 @@ class DCA(QWidget):
         self.tab5.setLayout(self.tab5.layout)
 
         #탭6(A.R.M)
+        self.runbutton_6 = QPushButton('Run')
+        self.runbutton_6.clicked.connect((lambda:run_ARM(self.csv, 0, 0, self.ARM_table)))
+
+        self.ARM_table = QTableWidget(self)
+        self.ARM_table.setColumnCount(4)
+        self.ARM_table.setHorizontalHeaderLabels(['antecedents', 'consequence', 'support', 'confidence'])
+        self.ARM_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+
+        self.tab6.layout = QVBoxLayout()
+        self.tab6.layout.addWidget(self.runbutton_6)
+        self.tab6.layout.addWidget(self.ARM_table)
+
+        self.tab6.setLayout(self.tab6.layout)
 
         #탭 통합
         self.tabs.addTab(self.tab1, "Main")
@@ -361,7 +378,7 @@ class DCA(QWidget):
             QMessageBox.warning(self, 'Failed', 'Error!')
     
     def line_change_value(self, slider, line):
-        try: 
+        try:
             if line.text() != '':
                 line_value = (double)(line.text())
                 if line_value >=0 and line_value <= 1:
