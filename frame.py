@@ -62,6 +62,7 @@ from module.save_csv import save_csv
 from module.run_show_formal_context import run_Show_formal_context
 from module.run_FCA import run_FCA
 from module.run_ARM import run_ARM
+from module.save_ARM import save_ARM
 
 from mlxtend.preprocessing import TransactionEncoder
 from mlxtend.frequent_patterns import apriori
@@ -219,6 +220,22 @@ class DCA(QWidget):
         self.tab4.setLayout(self.tab4.layout)
 
         #탭5(extract association rules)
+        #버튼
+        self.runbutton_5 = QPushButton('Run')
+        self.runbutton_5.clicked.connect((lambda:run_ARM(self.csv, 0, 0, self.ARM_table)))
+
+        self.ARM_table = QTableWidget(self)
+        self.ARM_table.setColumnCount(4)
+        self.ARM_table.setHorizontalHeaderLabels(['antecedents', 'consequence', 'support', 'confidence'])
+        self.ARM_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+
+        self.tab5.layout = QVBoxLayout()
+        self.tab5.layout.addWidget(self.runbutton_5)
+        self.tab5.layout.addWidget(self.ARM_table)
+
+        self.tab5.setLayout(self.tab5.layout)
+
+        #탭6(A.R.M)
         self.min_support = QLabel("minimum support      ")
         self.min_conf = QLabel("minimum confidence ")
 
@@ -257,10 +274,11 @@ class DCA(QWidget):
         self.conf_val.editingFinished.connect(lambda:self.line_change_value(self.conf_slider, self.conf_val))
 
         #버튼
-        self.runbutton_5 = QPushButton('Run')
-        self.runbutton_5.clicked.connect(lambda:run_ARM(self.csv, self.sup_slider.value(), 
+        self.runbutton_6 = QPushButton('Run')
+        self.runbutton_6.clicked.connect(lambda:run_ARM(self.csv, self.sup_slider.value(), 
                                          self.conf_slider.value(), self.association_rule_table))
-        self.savebutton_5 = QPushButton('Save')
+        self.savebutton_6 = QPushButton('Save')
+        self.savebutton_6.clicked.connect(lambda:save_ARM(self.association_rule_table))
 
         #테이블 생성
         self.association_rule_table = QTableWidget(self)
@@ -279,30 +297,15 @@ class DCA(QWidget):
         self.conf_layout.addWidget(self.conf_slider)
         self.conf_layout.addWidget(self.conf_val)
 
-        self.buttons_5 = QHBoxLayout()
-        self.buttons_5.addWidget(self.runbutton_5)
-        self.buttons_5.addWidget(self.savebutton_5)
-
-        self.tab5.layout = QVBoxLayout()
-        self.tab5.layout.addLayout(self.sup_layout)
-        self.tab5.layout.addLayout(self.conf_layout)
-        self.tab5.layout.addLayout(self.buttons_5)
-        self.tab5.layout.addWidget(self.association_rule_table)
-
-        self.tab5.setLayout(self.tab5.layout)
-
-        #탭6(A.R.M)
-        self.runbutton_6 = QPushButton('Run')
-        self.runbutton_6.clicked.connect((lambda:run_ARM(self.csv, 0, 0, self.ARM_table)))
-
-        self.ARM_table = QTableWidget(self)
-        self.ARM_table.setColumnCount(4)
-        self.ARM_table.setHorizontalHeaderLabels(['antecedents', 'consequence', 'support', 'confidence'])
-        self.ARM_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.buttons_6 = QHBoxLayout()
+        self.buttons_6.addWidget(self.runbutton_6)
+        self.buttons_6.addWidget(self.savebutton_6)
 
         self.tab6.layout = QVBoxLayout()
-        self.tab6.layout.addWidget(self.runbutton_6)
-        self.tab6.layout.addWidget(self.ARM_table)
+        self.tab6.layout.addLayout(self.sup_layout)
+        self.tab6.layout.addLayout(self.conf_layout)
+        self.tab6.layout.addLayout(self.buttons_6)
+        self.tab6.layout.addWidget(self.association_rule_table)
 
         self.tab6.setLayout(self.tab6.layout)
 
@@ -311,8 +314,8 @@ class DCA(QWidget):
         self.tabs.addTab(self.tab2, "Show formal context")
         self.tabs.addTab(self.tab3, "Run FCA")
         self.tabs.addTab(self.tab4, "Show concept lattice")
-        self.tabs.addTab(self.tab5, "Extract association rules")
-        self.tabs.addTab(self.tab6, "A.R.M")
+        self.tabs.addTab(self.tab5, "A.R.M")
+        self.tabs.addTab(self.tab6, "Extract association rules")
         
         #레이아웃 메인으로 집어넣기
         self.layout.addWidget(self.tabs)
