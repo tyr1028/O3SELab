@@ -79,6 +79,9 @@ class DCA(QWidget):
         self.setWindowIcon((QIcon('source/icon.png')))
         self.setGeometry(100, 100, 1200, 900)
 
+        #csv
+        self.csv = ''
+
         #레이아웃 설정
         self.layout = QVBoxLayout(self)
 
