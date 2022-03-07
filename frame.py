@@ -250,8 +250,7 @@ class DCA(QWidget):
         self.sup_slider.setValue(50)
         self.sup_slider.setSingleStep(1)
         self.sup_slider.valueChanged.connect(lambda:self.slider_change_value(self.sup_slider, self.support_val))
-        self.sup_slider.valueChanged.connect(lambda:run_ARM(self.csv, self.sup_slider.value(), 
-                                             self.conf_slider.value(), self.association_rule_table))
+        
 
         self.conf_slider = QSlider(Qt.Horizontal, self)
         self.conf_slider.setTickPosition(2)
@@ -260,8 +259,6 @@ class DCA(QWidget):
         self.conf_slider.setValue(50)
         self.conf_slider.setSingleStep(1)
         self.conf_slider.valueChanged.connect(lambda:self.slider_change_value(self.conf_slider, self.conf_val))
-        self.conf_slider.valueChanged.connect(lambda:run_ARM(self.csv, self.sup_slider.value(), 
-                                              self.conf_slider.value(), self.association_rule_table))
 
         #입력받는 부분
         self.support_val = QLineEdit()
@@ -275,6 +272,15 @@ class DCA(QWidget):
         self.conf_val.setValidator(QDoubleValidator(0, 1, 3, self))
         self.conf_val.setMaximumWidth(140)
         self.conf_val.editingFinished.connect(lambda:self.line_change_value(self.conf_slider, self.conf_val))
+
+        #체크박스
+        self.dynamic = QCheckBox('Dynamic', self)
+        self.dynamic.setMaximumWidth(80)
+        if self.dynamic.isChecked:
+            self.sup_slider.valueChanged.connect(lambda:run_ARM(self.csv, self.sup_slider.value(), 
+                                                 self.conf_slider.value(), self.association_rule_table))
+            self.conf_slider.valueChanged.connect(lambda:run_ARM(self.csv, self.sup_slider.value(), 
+                                                  self.conf_slider.value(), self.association_rule_table))
 
         #버튼
         self.runbutton_6 = QPushButton('Run')
@@ -301,6 +307,7 @@ class DCA(QWidget):
         self.conf_layout.addWidget(self.conf_val)
 
         self.buttons_6 = QHBoxLayout()
+        self.buttons_6.addWidget(self.dynamic)
         self.buttons_6.addWidget(self.runbutton_6)
         self.buttons_6.addWidget(self.savebutton_6)
 
