@@ -25,22 +25,26 @@ def save_csv(table):
 
         #기존 csv파일과 동일한 형식 유지
         csv_save[0].insert(0, 'name')
+        csv_save[0].pop()
         
-        #파일 탐색기 오픈 후 경로지정
-        root = Tk().withdraw()
-        title = 'Save project as'
-        ftypes = [('csv file', '.csv'), ('Allfiles', '*')]
-        filename = tkinter.filedialog.asksaveasfilename(filetypes=ftypes, title=title, initialfile='filename.csv')
+        try:
+            #파일 탐색기 오픈 후 경로지정
+            root = Tk().withdraw()
+            title = 'Save project as'
+            ftypes = [('csv file', '.csv'), ('Allfiles', '*')]
+            filename = tkinter.filedialog.asksaveasfilename(filetypes=ftypes, title=title, initialfile='filename.csv')
 
-        if '.csv' in filename or filename == '':
+            if '.csv' in filename or filename == '':
+                pass
+            else:
+                filename = filename + '.csv'
+
+            #파일 저장 코드
+            # print(filename)
+            dataframe = pd.DataFrame(csv_save)
+            dataframe.to_csv(filename, header=False, index=False)
+        except:
             pass
-        else:
-            filename = filename + '.csv'
-
-        #파일 저장 코드
-        # print(filename)
-        dataframe = pd.DataFrame(csv_save)
-        dataframe.to_csv(filename, header=False, index=False)
 
     except:
         QMessageBox.warning(table, 'Failed', 'Error!')
