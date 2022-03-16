@@ -229,7 +229,7 @@ class DCA(QWidget):
 
         self.ARM_table = QTableWidget(self)
         self.ARM_table.setColumnCount(4)
-        self.ARM_table.setHorizontalHeaderLabels(['antecedents', 'consequence', 'support', 'confidence'])
+        self.ARM_table.setHorizontalHeaderLabels(['Antecedents', 'Consequence', 'Support', 'Confidence'])
         self.ARM_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
         self.tab5.layout = QVBoxLayout()
@@ -239,8 +239,8 @@ class DCA(QWidget):
         self.tab5.setLayout(self.tab5.layout)
 
         #탭6(A.R.M)
-        self.min_support = QLabel("minimum support      ")
-        self.min_conf = QLabel("minimum confidence ")
+        self.min_support = QLabel("Minimum Support      ")
+        self.min_conf = QLabel("Minimum Confidence ")
 
         #support confidence 슬라이더 부분
         self.sup_slider = QSlider(Qt.Horizontal, self)
@@ -250,6 +250,8 @@ class DCA(QWidget):
         self.sup_slider.setValue(50)
         self.sup_slider.setSingleStep(1)
         self.sup_slider.valueChanged.connect(lambda:self.slider_change_value(self.sup_slider, self.support_val))
+        self.sup_slider.valueChanged.connect(lambda:run_ARM(self.csv, self.sup_slider.value(), 
+                                             self.conf_slider.value(), self.association_rule_table, self.dynamic.isChecked()))
         
 
         self.conf_slider = QSlider(Qt.Horizontal, self)
@@ -259,6 +261,8 @@ class DCA(QWidget):
         self.conf_slider.setValue(50)
         self.conf_slider.setSingleStep(1)
         self.conf_slider.valueChanged.connect(lambda:self.slider_change_value(self.conf_slider, self.conf_val))
+        self.conf_slider.valueChanged.connect(lambda:run_ARM(self.csv, self.sup_slider.value(), 
+                                              self.conf_slider.value(), self.association_rule_table, self.dynamic.isChecked()))
 
         #입력받는 부분
         self.support_val = QLineEdit()
@@ -276,23 +280,18 @@ class DCA(QWidget):
         #체크박스
         self.dynamic = QCheckBox('Dynamic', self)
         self.dynamic.setMaximumWidth(80)
-        if self.dynamic.isChecked:
-            self.sup_slider.valueChanged.connect(lambda:run_ARM(self.csv, self.sup_slider.value(), 
-                                                 self.conf_slider.value(), self.association_rule_table))
-            self.conf_slider.valueChanged.connect(lambda:run_ARM(self.csv, self.sup_slider.value(), 
-                                                  self.conf_slider.value(), self.association_rule_table))
 
         #버튼
         self.runbutton_6 = QPushButton('Run')
         self.runbutton_6.clicked.connect(lambda:run_ARM(self.csv, self.sup_slider.value(), 
-                                         self.conf_slider.value(), self.association_rule_table))
+                                         self.conf_slider.value(), self.association_rule_table, True))
         self.savebutton_6 = QPushButton('Save')
         self.savebutton_6.clicked.connect(lambda:save_ARM(self.association_rule_table))
 
         #테이블 생성
         self.association_rule_table = QTableWidget(self)
         self.association_rule_table.setColumnCount(4)
-        self.association_rule_table.setHorizontalHeaderLabels(['antecedents', 'consequence', 'support', 'confidence'])
+        self.association_rule_table.setHorizontalHeaderLabels(['Antecedents', 'Consequence', 'Support', 'Confidence'])
         self.association_rule_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
         #레이어 생성부분
@@ -320,12 +319,12 @@ class DCA(QWidget):
         self.tab6.setLayout(self.tab6.layout)
 
         #탭 통합
-        self.tabs.addTab(self.tab1, "Main")
-        self.tabs.addTab(self.tab2, "Show formal context")
-        self.tabs.addTab(self.tab3, "Run FCA")
-        self.tabs.addTab(self.tab4, "Show concept lattice")
-        self.tabs.addTab(self.tab5, "A.R.M")
-        self.tabs.addTab(self.tab6, "Extract association rules")
+        self.tabs.addTab(self.tab1, "Data Load")
+        self.tabs.addTab(self.tab2, "Formal Context")
+        self.tabs.addTab(self.tab3, "Concept List")
+        self.tabs.addTab(self.tab4, "Concept Lattice")
+        self.tabs.addTab(self.tab5, "Implication Rules")
+        self.tabs.addTab(self.tab6, "Association Rules")
         
         #레이아웃 메인으로 집어넣기
         self.layout.addWidget(self.tabs)
