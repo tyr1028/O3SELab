@@ -225,7 +225,7 @@ class DCA(QWidget):
         #탭5(extract association rules)
         #버튼
         self.runbutton_5 = QPushButton('Run')
-        self.runbutton_5.clicked.connect((lambda:run_ARM(self.csv, 0, 0, self.ARM_table)))
+        self.runbutton_5.clicked.connect((lambda:run_ARM(self.csv, 0, 0, self.ARM_table, True)))
 
         self.ARM_table = QTableWidget(self)
         self.ARM_table.setColumnCount(4)
