@@ -51,6 +51,7 @@ import pandas as pd
 from tkinter import *
 import tkinter.filedialog
 
+import os
 import concepts
 import sys
 
@@ -75,7 +76,7 @@ class DCA(QWidget):
 
     def initUI(self):
         #윈도우창 이름, 아이콘, 창 크기
-        self.setWindowTitle('FactChecker')
+        self.setWindowTitle('Fact Miner')
         self.setWindowIcon((QIcon('source/icon.png')))
         self.setGeometry(100, 100, 1200, 900)
 
@@ -400,6 +401,7 @@ class DCA(QWidget):
         except:
             QMessageBox.warning(self, 'Failed', 'Error!')
 
+os.chdir(os.path.dirname(os.path.realpath(__file__)))
 app = QApplication(sys.argv)
 ex = DCA()
 sys.exit(app.exec_())
