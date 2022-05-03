@@ -1,104 +1,110 @@
-<<<<<<< HEAD
-// <Lattice object of 2 atoms 7 concepts 3 coatoms at 0x2007d860e50>
-=======
-// <Lattice object of 2 atoms 27 concepts 3 coatoms at 0x2562f1c4d90>
->>>>>>> a1e1a0b6bac10d5d18a268a0087851b50820713b
+// <Lattice object of 7 atoms 29 concepts 4 coatoms at 0x179025d4070>
 digraph Lattice {
 	node [label="" shape=circle style=filled width=.25]
 	edge [dir=none labeldistance=1.5 minlen=2]
 	c0
+	c0 -> c0 [color=transparent labelangle=90 taillabel="20s over divorced unknown y"]
 	c1
-	c1 -> c1 [color=transparent headlabel="Air Canada" labelangle=270]
+	c1 -> c1 [color=transparent headlabel=0 labelangle=270]
 	c1 -> c0
 	c2
-	c2 -> c2 [color=transparent headlabel=Lufthansa labelangle=270]
+	c2 -> c2 [color=transparent headlabel=1 labelangle=270]
 	c2 -> c0
 	c3
-	c3 -> c1
-	c3 -> c2
+	c3 -> c3 [color=transparent headlabel=2 labelangle=270]
+	c3 -> c0
 	c4
-	c4 -> c4 [color=transparent headlabel="United Airlines" labelangle=270]
-	c4 -> c1
+	c4 -> c4 [color=transparent headlabel=3 labelangle=270]
+	c4 -> c0
 	c5
-	c5 -> c5 [color=transparent headlabel="Singapore Airlines" labelangle=270]
-	c5 -> c2
+	c5 -> c5 [color=transparent headlabel=4 labelangle=270]
+	c5 -> c5 [color=transparent labelangle=90 taillabel="50s"]
+	c5 -> c0
 	c6
-	c6 -> c6 [color=transparent headlabel=VARIG labelangle=270]
-	c6 -> c2
+	c6 -> c6 [color=transparent headlabel=8 labelangle=270]
+	c6 -> c0
 	c7
-	c7 -> c7 [color=transparent labelangle=90 taillabel="Middle East"]
-	c7 -> c3
-	c7 -> c5
+	c7 -> c7 [color=transparent headlabel=9 labelangle=270]
+	c7 -> c0
 	c8
-	c8 -> c3
-	c8 -> c4
+	c8 -> c8 [color=transparent labelangle=90 taillabel=primary]
+	c8 -> c1
+	c8 -> c7
 	c9
-	c9 -> c9 [color=transparent headlabel=Mexicana labelangle=270]
+	c9 -> c2
 	c9 -> c4
 	c10
-	c10 -> c10 [color=transparent headlabel="Thai Airways International" labelangle=270]
-	c10 -> c4
+	c10 -> c10 [color=transparent headlabel=7 labelangle=270]
+	c10 -> c2
 	c11
-	c11 -> c11 [color=transparent headlabel="The Austian Airlines Group" labelangle=270]
-	c11 -> c5
+	c11 -> c11 [color=transparent headlabel=5 labelangle=270]
+	c11 -> c11 [color=transparent labelangle=90 taillabel=single]
+	c11 -> c3
 	c12
-	c12 -> c12 [color=transparent headlabel="Scandinavian Airlines" labelangle=270]
-	c12 -> c6
+	c12 -> c12 [color=transparent headlabel=6 labelangle=270]
+	c12 -> c4
 	c13
-	c13 -> c8
-	c13 -> c9
+	c13 -> c13 [color=transparent labelangle=90 taillabel="40s"]
+	c13 -> c6
+	c13 -> c7
 	c14
-	c14 -> c6
-	c14 -> c8
+	c14 -> c14 [color=transparent labelangle=90 taillabel=loan]
+	c14 -> c7
+	c14 -> c9
 	c15
-	c15 -> c15 [color=transparent labelangle=90 taillabel=Caribbean]
-	c15 -> c9
+	c15 -> c15 [color=transparent labelangle=90 taillabel=secondary]
+	c15 -> c5
 	c15 -> c10
 	c16
-	c16 -> c7
-	c16 -> c8
-	c16 -> c11
+	c16 -> c3
+	c16 -> c12
 	c17
-	c17 -> c17 [color=transparent labelangle=90 taillabel=Mexico]
-	c17 -> c13
-	c17 -> c14
+	c17 -> c6
+	c17 -> c12
 	c18
-	c18 -> c18 [color=transparent labelangle=90 taillabel=Africa]
-	c18 -> c11
+	c18 -> c9
+	c18 -> c10
 	c18 -> c12
 	c19
-	c19 -> c19 [color=transparent labelangle=90 taillabel=Canada]
-	c19 -> c13
+	c19 -> c11
 	c19 -> c16
 	c20
-	c20 -> c10
-	c20 -> c12
-	c20 -> c14
+	c20 -> c16
+	c20 -> c17
 	c21
-	c21 -> c21 [color=transparent labelangle=90 taillabel="Latin America"]
-	c21 -> c15
-	c21 -> c17
-	c21 -> c20
+	c21 -> c1
+	c21 -> c18
 	c22
-	c22 -> c22 [color=transparent headlabel="Air New Zealand All Nippon Airways" labelangle=270]
 	c22 -> c16
 	c22 -> c18
-	c22 -> c20
 	c23
-	c23 -> c23 [color=transparent headlabel="Ansett Australia" labelangle=270]
-	c23 -> c23 [color=transparent labelangle=90 taillabel="Asia Pacific"]
-	c23 -> c22
+	c23 -> c23 [color=transparent labelangle=90 taillabel=tertiary]
+	c23 -> c19
+	c23 -> c20
 	c24
-	c24 -> c24 [color=transparent headlabel="British Midland" labelangle=270]
-	c24 -> c24 [color=transparent labelangle=90 taillabel=Europe]
+	c24 -> c24 [color=transparent labelangle=90 taillabel="30s"]
+	c24 -> c19
+	c24 -> c21
 	c24 -> c22
 	c25
-	c25 -> c25 [color=transparent labelangle=90 taillabel="United States"]
-	c25 -> c19
-	c25 -> c21
-	c25 -> c22
+	c25 -> c13
+	c25 -> c14
+	c25 -> c15
+	c25 -> c17
+	c25 -> c18
 	c26
-	c26 -> c23
-	c26 -> c24
+	c26 -> c26 [color=transparent labelangle=90 taillabel=married]
+	c26 -> c8
+	c26 -> c21
 	c26 -> c25
+	c27
+	c27 -> c27 [color=transparent labelangle=90 taillabel=housing]
+	c27 -> c20
+	c27 -> c22
+	c27 -> c25
+	c28
+	c28 -> c23
+	c28 -> c24
+	c28 -> c26
+	c28 -> c27
 }
