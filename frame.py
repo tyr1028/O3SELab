@@ -340,7 +340,8 @@ class DCA(QWidget):
             self.csv = concepts.load_csv(fname[0])
             QMessageBox.information(self, 'Success', 'Load Success')
             self.loadname.setText(fname[0])
-        except:
+        except Exception as e:
+            print(e)
             QMessageBox.warning(self, 'Failed', 'Load Failed')
 
     def concept_lattice(self):
