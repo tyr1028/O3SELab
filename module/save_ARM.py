@@ -45,5 +45,6 @@ def save_ARM(table):
         except:
             pass
 
-    except:
+    except Exception as e:
+        print(e)
         QMessageBox.warning(table, 'Failed', 'Error!')

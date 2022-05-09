@@ -39,5 +39,6 @@ def run_FCA(csv, FCA_table):
                 FCA_table.setItem(cnt, 1, QTableWidgetItem('[' + intent_str + ']'))
             #반복횟수 카운트
             cnt = cnt + 1
-    except:
+    except Exception as e:
+        print(e)
         QMessageBox.warning(FCA_table, 'Failed', 'Error!')

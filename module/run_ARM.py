@@ -59,7 +59,8 @@ def run_ARM(csv, sup_val, conf_val, ARM_table, TorF):
                 ARM_table.setItem(cnt, 3, QTableWidgetItem((str)(rule[3])))
                 #반복횟수 카운트
                 cnt = cnt + 1
-        except:
+        except Exception as e:
+            print(e)
             QMessageBox.warning(ARM_table, 'Failed', 'Error!')
     else:
         pass
